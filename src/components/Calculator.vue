@@ -88,7 +88,7 @@ export default {
     }
 
     function equal() {
-      currentValue.value = `${operator(parseFloat(currentValue.value), parseFloat(previous.value))}`
+      currentValue.value = `${operator(parseFloat(previous.value), parseFloat(currentValue.value))}`
       previous.value = null
     }
 
