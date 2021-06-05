@@ -1,29 +1,113 @@
 <template>
   <div class="calculator">
-    <div class="calculator__display">335.23523</div>
-    <div class="calculator__btn ">C</div>
-    <div class="calculator__btn ">+</div>
-    <div class="calculator__btn ">%</div>
-    <div class="calculator__btn calculator__operator">-</div>
-    <div class="calculator__btn">7</div>
-    <div class="calculator__btn">8</div>
-    <div class="calculator__btn">9</div>
-    <div class="calculator__btn calculator__operator">x</div>
-    <div class="calculator__btn">4</div>
-    <div class="calculator__btn">5</div>
-    <div class="calculator__btn">6</div>
-    <div class="calculator__btn calculator__operator">-</div>
-    <div class="calculator__btn">1</div>
-    <div class="calculator__btn">2</div>
-    <div class="calculator__btn">3</div>
-    <div class="calculator__btn calculator__operator">+</div>
-    <div class="calculator__btn calculator__zero">0</div>
-    <div class="calculator__btn">.</div>
-    <div class="calculator__btn calculator__operator">=</div>
+    <div class="calculator__display">{{ currentValue || 0 }}</div>
+    <div @click="clear" class="calculator__btn">C</div>
+    <div @click="sign" class="calculator__btn">+/-</div>
+    <div @click="percent" class="calculator__btn">%</div>
+    <div @click="divide" class="calculator__btn calculator__operator">/</div>
+    <div @click="append('7')" class="calculator__btn">7</div>
+    <div @click="append('8')" class="calculator__btn">8</div>
+    <div @click="append('9')" class="calculator__btn">9</div>
+    <div @click="times" class="calculator__btn calculator__operator">x</div>
+    <div @click="append('4')" class="calculator__btn">4</div>
+    <div @click="append('5')" class="calculator__btn">5</div>
+    <div @click="append('6')" class="calculator__btn">6</div>
+    <div @click="minus" class="calculator__btn calculator__operator">-</div>
+    <div @click="append('1')" class="calculator__btn">1</div>
+    <div @click="append('2')" class="calculator__btn">2</div>
+    <div @click="append('3')" class="calculator__btn">3</div>
+    <div @click="add" class="calculator__btn calculator__operator">+</div>
+    <div @click="append('0')" class="calculator__btn calculator__zero">0</div>
+    <div @click="dot" class="calculator__btn">.</div>
+    <div @click="equal" class="calculator__btn calculator__operator">=</div>
   </div>
 </template>
 
-<script setup></script>
+<script>
+import { ref } from 'vue';
+export default {
+  setup() {
+    let previous = ref(null);
+    let currentValue = ref('');
+    let operator = null;
+    let operatorClicked = ref(false);
+
+    function clear() {
+      currentValue.value = '';
+    }
+
+    function sign() {
+      currentValue.value =
+        currentValue.value.charAt(0) === '-'
+          ? currentValue.value.slice(1)
+          : `-${currentValue.value}`;
+    }
+
+    function percent() {
+      currentValue.value = `${parseFloat(currentValue.value) / 100}`;
+    }
+
+    function append(number) {
+      if(operatorClicked.value) {
+        currentValue.value = ''
+        operatorClicked.value = false
+      }
+
+      currentValue.value = `${currentValue.value}${number}`;
+    }
+
+    function dot() {
+      if (currentValue.value.indexOf('.') === -1) {
+        append('.');
+      }
+    }
+
+    function setprevious() {
+      previous.value = currentValue.value;
+      operatorClicked.value = true;
+    }
+
+    function divide() {
+      operator = (a, b) => a / b;
+      setprevious();
+    }
+
+    function times() {
+      operator = (a, b) => a * b;
+      setprevious();
+    }
+
+    function minus() {
+      operator = (a, b) => a - b;
+      setprevious();
+    }
+
+    function add() {
+      operator = (a, b) => a + b;
+      setprevious();
+    }
+
+    function equal() {
+      currentValue.value = `${operator(parseFloat(currentValue.value), parseFloat(previous.value))}`
+      previous.value = null
+    }
+
+    return {
+      currentValue,
+      clear,
+      sign,
+      percent,
+      append,
+      dot,
+      divide,
+      times,
+      minus,
+      add,
+      equal
+    };
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 .calculator {
