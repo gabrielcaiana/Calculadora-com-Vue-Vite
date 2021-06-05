@@ -1,16 +1,29 @@
 <template>
-  
+  <div class="app">
+    <Calculator />
+  </div>
 </template>
 
-<script setup>
+<script>
+import Calculator from './components/Calculator.vue'
+export default {
+  components: {
+    Calculator
+  },
+  setup () {
+    
 
+    return {}
+  }
+}
 </script>
 
-<style>
-#app {
-  font-family: Helvetica, Arial, sans-serif;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss" scoped>
+ .app {
+   height: 100vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
+ }
 </style>
